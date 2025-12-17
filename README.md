@@ -1,20 +1,94 @@
-# AWS Project - Build a Full End-to-End Web Application with 7 Services | Step-by-Step Tutorial
-
-This repo contains the code files used in this [YouTube video](https://youtu.be/K6v6t5z6AsU).
+# AWS Project – Built a Full End-to-End Serverless Web Application Using 7 AWS services
 
 ## TL;DR
-We're creating a web application for a unicorn ride-sharing service called Wild Rydes (from the original [Amazon workshop](https://aws.amazon.com/serverless-workshops)).  The app uses IAM, Amplify, Cognito, Lambda, API Gateway and DynamoDB, with code stored in GitHub and incorporated into a CI/CD pipeline with Amplify.
 
-The app will let you create an account and log in, then request a ride by clicking on a map (powered by ArcGIS).  The code can also be extended to build out more functionality.
+I built a **fully serverless web application** for a unicorn ride-sharing service called **Wild Rydes**, based on the original [AWS Serverless Wild Rydes Workshop](https://aws.amazon.com/serverless-workshops/).
+The application integrates **AWS Amplify, IAM, Amazon Cognito, AWS Lambda, Amazon API Gateway, and Amazon DynamoDB**, with source code hosted on GitHub and deployed using a CI/CD pipeline via AWS Amplify.
+
+Users can create an account, log in securely, and request a ride by clicking on a map powered by ArcGIS.
+This project was implemented as a **hands-on learning exercise** to understand real-world serverless architectures on AWS.
+
+---
+
+## Acknowledgement
+
+This project was developed by following AWS learning material and tutorials by **Amber Israelsen**.
+
+YouTube Playlist:
+[https://youtube.com/playlist?list=PLwyXYwu8kL0wMalR9iXJIPfiMYWNFWQzx](https://youtube.com/playlist?list=PLwyXYwu8kL0wMalR9iXJIPfiMYWNFWQzx)
+
+---
+
+## Architecture Overview
+
+The application follows a serverless, event-driven architecture:
+
+* Frontend hosted using AWS Amplify
+* Authentication handled by Amazon Cognito
+* REST API managed through Amazon API Gateway
+* Backend logic executed via AWS Lambda
+* Ride request data stored in Amazon DynamoDB
+* Access controlled using AWS IAM roles and policies
+
+---
+
+## AWS Services Used
+
+* AWS Amplify (Frontend hosting and CI/CD)
+* Amazon Cognito (User authentication)
+* AWS Lambda (Backend logic)
+* Amazon API Gateway (API routing)
+* Amazon DynamoDB (NoSQL database)
+* AWS IAM (Access control and permissions)
+* GitHub (Source code management)
+
+---
 
 ## Cost
-All services used are eligible for the [AWS Free Tier](https://aws.amazon.com/free/).  Outside of the Free Tier, there may be small charges associated with building the app (less than $1 USD), but charges will continue to incur if you leave the app running.  Please see the end of the YouTube video for instructions on how to delete all resources used in the video.
+
+All services used are eligible for the **AWS Free Tier**.
+
+Outside of the Free Tier, minimal charges (typically less than $1 USD) may occur during development and testing.
+To avoid recurring charges, the deployed application and AWS resources were **terminated after successful testing**.
+
+---
 
 ## The Application Code
-The application code is here in this repository.
+
+All frontend and backend source code used in this project is available in this repository.
+
+---
+
+## Implementation Summary
+
+### Frontend
+
+* Deployed using AWS Amplify
+* Integrated with GitHub for continuous deployment
+* Configuration updated to connect with Cognito and API Gateway
+
+### Authentication
+
+* Amazon Cognito User Pool created
+* User Pool ID and Client ID configured in frontend
+* Secure sign-up and sign-in flow verified
+
+### Database
+
+* Amazon DynamoDB table created with `RideId` as the partition key
+* Used to store ride request details from Lambda
+
+### Backend
+
+* AWS Lambda function implemented using Node.js 20.x
+* IAM execution role configured with least-privilege permissions
+* Lambda invoked through API Gateway with Cognito authorizer
+
+---
 
 ## The Lambda Function Code
-Here is the code for the Lambda function, originally taken from the [AWS workshop](https://aws.amazon.com/getting-started/hands-on/build-serverless-web-app-lambda-apigateway-s3-dynamodb-cognito/module-3/ ), and updated for Node 20.x:
+
+The Lambda function logic is adapted from the official AWS workshop and updated for **Node.js 20.x**:
 
 ```node
 import { randomBytes } from 'crypto';
@@ -65,7 +139,12 @@ export const handler = async (event, context) => {
 };
 
 function findUnicorn(pickupLocation) {
-    console.log('Finding unicorn for ', pickupLocation.Latitude, ', ', pickupLocation.Longitude);
+    console.log(
+        'Finding unicorn for ',
+        pickupLocation.Latitude,
+        ', ',
+        pickupLocation.Longitude
+    );
     return fleet[Math.floor(Math.random() * fleet.length)];
 }
 
@@ -83,7 +162,8 @@ async function recordRide(rideId, username, unicorn) {
 }
 
 function toUrlString(buffer) {
-    return buffer.toString('base64')
+    return buffer
+        .toString('base64')
         .replace(/\+/g, '-')
         .replace(/\//g, '_')
         .replace(/=/g, '');
@@ -103,8 +183,11 @@ function errorResponse(errorMessage, awsRequestId) {
 }
 ```
 
-## The Lambda Function Test Function
-Here is the code used to test the Lambda function:
+---
+
+## The Lambda Function Test Event
+
+The following test event was used to validate the Lambda function:
 
 ```json
 {
@@ -128,3 +211,16 @@ Here is the code used to test the Lambda function:
 }
 ```
 
+---
+
+## Final Outcome
+
+A fully functional **serverless ride-request web application** demonstrating:
+
+* Secure user authentication with Amazon Cognito
+* API-driven backend using API Gateway and Lambda
+* Scalable NoSQL data storage with DynamoDB
+* Continuous deployment using AWS Amplify and GitHub
+* Proper IAM-based access control
+
+---
